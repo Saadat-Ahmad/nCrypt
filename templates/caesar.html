@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}Caesar code{% endblock %}
+
+{% block content %}
+  <h2>Caesar Cipher</h2>
+  <form method="POST" action="/caesar">
+    <label for="text_input">Enter text:</label><br>
+    <input type="text" id="text_input" name="text_input" required><br><br>
+
+    <label for="shift">Enter shift:</label><br>
+    <input type="number" id="shift" name="shift" value="3" required><br><br>
+
+    <button type="submit" name="action" value="encrypt">Encrypt</button>
+    <button type="submit" name="action" value="decrypt">Decrypt</button>
+  </form>
+
+{% if result %}
+    <p><strong>{{ result }}</strong></p>
+{% endif %}
+
+{% endblock %}

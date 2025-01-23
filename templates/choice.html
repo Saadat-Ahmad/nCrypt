@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+<head>
+{% block title %}Home - nCrypt{% endblock %}
+<link rel="icon" type="image/x-icon" href="/images/favicon.png">
+</head>
+{% block content %}
+<header>
+    <div class="container">
+        <header>
+            <h1 class="typing-animation">nCrypt.site</h1>
+        </header>
+    </div>
+    <h2>Choose encryption method</h2>
+</header>
+
+<div class="custom-button-grid">
+    <a href="/create-encryption" class="custom-grid-button">Custom Encryption</a>
+    <a href="/create-language" class="custom-grid-button">Custom Language</a>
+</div>
+<div class="custom-encryption-container">
+    <!-- <a href="/use-custom" class="grid-button">Custom Encryption</a> -->
+    <!-- <a href="/create" class="custom-encryption-button">Create Custom Encryption</a> -->
+</div>
+
+<style>
+    body {
+        background-color: #000000;
+        color: #00ff00;
+        font-family: 'Courier New', Courier, monospace;
+        margin: 0;
+        padding: 0;
+    }
+    
+    
+    
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        header h1 {
+            font-size: 2rem;
+        }
+    
+        .about, .usecases, .developer {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+    
+    
+        .socials a {
+            font-size: 1.2rem;
+            margin: 0 8px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        header h1 {
+            font-size: 1.5rem;
+        }
+    
+        .socials a {
+            font-size: 1rem;
+        }
+    }
+    </style>
+{% endblock %}

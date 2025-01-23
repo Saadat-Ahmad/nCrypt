@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+
+{% block title %}Custom encryption{% endblock %}
+
+{% block content %}
+<div>
+    <header>
+        <h2>Register a custom encryption</h2>
+    </header>
+
+    <form method="POST" action="/create-encryption">
+        <!-- Username Input -->
+        <input type="text" name="encryption" required placeholder="Encryption name">
+
+        <!-- Password Input -->
+        <input type="password" name="password" required placeholder="Encryption password">
+
+        <!-- Password Input -->
+        <input type="password" name="confirmation" required placeholder="Confirm password">
+
+        <!-- Login Button -->
+        <button type="submit" name="create" value="create">Create</button>
+    </form>
+</div>
+<div class="button-grid">
+    <a></a>
+    <a href="/use" class="grid-button" style="margin: 13px;">Use an existing encryption?</a>
+    <a></a>
+  </div>
+{% endblock %}

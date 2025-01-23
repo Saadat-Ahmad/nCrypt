@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+
+{% block title %}Custom encryption{% endblock %}
+
+{% block content %}
+<div>
+    <header>
+        <h2>Use a custom encryption</h2>
+    </header>
+
+    <form method="POST" action="/use">
+        <!-- Username Input -->
+        <input type="text" id="encryption" name="encryption" required placeholder="Encryption name">
+
+        <!-- Password Input -->
+        <input type="password" id="password" name="password" required placeholder="Encryption password">
+
+        <!-- Login Button -->
+        <button type="submit" name="use" value="use">Submit</button>
+    </form>
+
+</div>
+{% endblock %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}

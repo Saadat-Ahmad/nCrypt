@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+
+{% block title %}About - nCrypt{% endblock %}
+
+{% block content %}
+<div class="container">
+    <header>
+        <h1 class="typing-animation" style="font-family: 'Press Start 2P';">nCrypt.site</h1>
+    </header>
+
+    <section id="about" class="about">
+        <h2>About nCrypt</h2>
+        <p>nCrypt lets you create and share your own <mark>custom</mark> encryption methods for truly personal communication. Explore classic ciphers like Caesar and Base64, or design <mark>unique</mark> encryptions to keep messages private. Share your custom codes with friends and build a secure, personal language <mark>together</mark>. </br></br><b>nCrypt. Share. Connect.</b></p>
+        
+    </section>
+
+    <section id="usecases" class="usecases">
+        <h2>Use Cases</h2>
+        <ul>
+            <li><mark><b>Create Your Secret Language:</b></mark> Build custom encryptions and share them with friends for private, unbreakable conversations.</li>
+            <li><mark><b>Secure Your Passwords:</b></mark> Safeguard your credentials if you store them locally, encrypt them with your custom method—only you can decode it!</li>
+            <li><mark><b>Send Encrypted Messages:</b></mark> Use an encryption that only you and your friend know to text secretly, even in the official college group chat, making your conversations truly private and unique!</li>
+        </ul>
+        <div class="button-grid">
+            <a></a>
+            <a href="/use-custom" class="grid-button" style="margin: 13px; text-align:center;">Try Custom Encryption</a>
+            <a></a>
+          </div>
+    </section>
+
+    <section id="developer" class="developer">
+        
+        <div class="socials">
+            <a href="https://github.com/your-profile" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://twitter.com/your-profile" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://linkedin.com/in/your-profile" target="_blank"><i class="fab fa-linkedin"></i></a>
+        </div>
+    </section>
+</div>
+
+<style>
+body {
+    background-color: #000000;
+    color: #00ff00;
+    font-family: 'Courier New', Courier, monospace;
+    margin: 0;
+    padding: 0;
+}
+
+
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2rem;
+    }
+
+    .about, .usecases, .developer {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+
+    .socials a {
+        font-size: 1.2rem;
+        margin: 0 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    .socials a {
+        font-size: 1rem;
+    }
+}
+</style>
+{% endblock %}

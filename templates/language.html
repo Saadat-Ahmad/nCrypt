@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block title %}Custom encryption method{% endblock %}
+
+{% block content %}
+  <h2>Your Custom Encryption</h2>
+  <form method="POST" action="/use-custom-language">
+    <label for="text_input">Enter text:</label><br>
+    <input type="text" id="text_input" name="text_input" required><br><br>
+
+
+    <button type="submit" name="action" value="encrypt">Encrypt</button>
+    <button type="submit" name="action" value="decrypt">Decrypt</button>
+  </form>
+
+{% if result %}
+    <p></br><strong>{{ result }}</strong></p>
+{% endif %}
+<div class="button-grid">
+  <a></a>
+  <a href="/make-custom-language" class="grid-button" style="margin: 13px;">Modify this encryption</a>
+  <a></a>
+  <a></a>
+  <a href="/logout" class="grid-button-red" style="margin: 13px;">Log out of this encryption</a>
+</div>
+{% endblock %}

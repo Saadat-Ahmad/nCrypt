@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+
+{% block title %}Custom encryption{% endblock %}
+
+{% block content %}
+<div>
+    <header>
+        <h2>Replace alphabets</h2>
+    </header>
+
+    <form action="/custom-string-max4" method="POST">
+        <div class="alpha-grid">
+            <input id="A" name="A" placeholder="A" required>
+            <input id="B" name="B" placeholder="B" required>
+            <input id="C" name="C" placeholder="C" required>
+            <input id="D" name="D" placeholder="D" required>
+            <input id="E" name="E" placeholder="E" required>
+            <input id="F" name="F" placeholder="F" required>
+            <input id="G" name="G" placeholder="G" required>
+            <input id="H" name="H" placeholder="H" required>
+            <input id="I" name="I" placeholder="I" required>
+            <input id="J" name="J" placeholder="J" required>
+            <input id="K" name="K" placeholder="K" required>
+            <input id="L" name="L" placeholder="L" required>
+            <input id="M" name="M" placeholder="M" required>
+            <input id="N" name="N" placeholder="N" required>
+            <input id="O" name="O" placeholder="O" required>
+            <input id="P" name="P" placeholder="P" required>
+            <input id="Q" name="Q" placeholder="Q" required>
+            <input id="R" name="R" placeholder="R" required>
+            <input id="S" name="S" placeholder="S" required>
+            <input id="T" name="T" placeholder="T" required>
+            <input id="U" name="U" placeholder="U" required>
+            <input id="V" name="V" placeholder="V" required>
+            <input id="W" name="W" placeholder="W" required>
+            <input id="X" name="X" placeholder="X" required>
+            <input id="Y" name="Y" placeholder="Y" required>
+            <input id="Z" name="Z" placeholder="Z" required>
+        </div>
+        <button type="submit" name="submit" value="submit" class="submit-button">Submit</button>
+    </form>
+
+</div>
+{% endblock %}
