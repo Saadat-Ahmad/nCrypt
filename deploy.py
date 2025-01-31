@@ -13,12 +13,12 @@ app.secret_key = '12345'
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ncrypt.db'
 Session(app)
 
 # db = SQL("sqlite:///database.db")
 
-conn = sqlite3.connect('database.db', check_same_thread=False)
+conn = sqlite3.connect('ncrypt.db', check_same_thread=False)
 db = conn.cursor()
 table = "CREATE TABLE IF NOT EXISTS 'encryption_methods' (id INTEGER PRIMARY KEY AUTOINCREMENT, encryption_name TEXT UNIQUE NOT NULL, hashed_password TEXT NOT NULL, encryption_list TEXT, 'length'  INTEGER , type TEXT, hashed_admin_key TEXT);"
 db.execute(table)
@@ -34,9 +34,10 @@ def generate_padded_encryption(length, encryption_list, i):
 def checkAdmin():
     key = request.form.get("adminKey")
     key = generate_password_hash(key)
-    rows = db.execute("SELECT hashed_admin_key FROM encryption_methods WHERE encryption_name = ?", int(session["user_id"])).fetchall()
+    rows = db.execute("SELECT hashed_admin_key FROM encryption_methods WHERE id = ?", (int(session["user_id"]), )).fetchall()
     keyHash = rows[0][0]
     if check_password_hash(key, keyHash):
+        session["admin"] = True
         return True
     else:
         return False
@@ -330,6 +331,7 @@ def use():
 
         # Remember which user has logged in
         session["user_id"] = rows[0][0]
+        session["admin"] = False
         # Redirect user to home page
         return render_template("encrypt.html")
 
@@ -390,6 +392,7 @@ def create():
             rows = db.execute(
             "SELECT id FROM encryption_methods WHERE encryption_name = ?", (encryption_name,)).fetchall()
             session["user_id"] = rows[0][0]
+            session["admin"] = False
             return redirect("/make-custom")
     else:
         return render_template("create.html")
@@ -428,8 +431,10 @@ def custom():
 @app.route('/make-custom', methods=["GET", "POST"])
 @login_required
 def numeric():
+    print(session["admin"])
     if request.method == "POST":
-        if checkAdmin():
+        render_template("admin.html")
+        if checkAdmin() or session["admin"]:
             if save_encryption("encryption(/make-custom)"):
                 return redirect("/use-custom")
             else:    
@@ -438,7 +443,6 @@ def numeric():
         else:
             flash("Give Admin key", "error")
             return render_template("admin.html")
-    flash("Give Admin key", "error")
     return render_template("admin.html")
 
 @app.route('/use-custom', methods=["GET", "POST"])
@@ -538,6 +542,7 @@ def createlang():
             rows = db.execute(
             "SELECT id FROM encryption_methods WHERE encryption_name = ?", (encryption_name,)).fetchall()
             session["user_id"] = rows[0][0]
+            session["admin"] = False
             return redirect("/make-custom-language")
     else:
         return render_template("createLang.html")

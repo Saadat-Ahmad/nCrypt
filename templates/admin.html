@@ -1,1 +1,17 @@
-<h1>admin</h1>
+{% extends 'layout.html' %}
+
+{% block title %}Custom encryption{% endblock %}
+
+{% block content %}
+<div>
+    <header>
+        <h2>Register a custom encryption</h2>
+    </header>
+
+    <form method="POST" action="/make-custom">
+        <input type="password" name="adminKey" required placeholder="Admin Key">
+
+        <button type="submit" name="submit" value="submit">Submit</button>
+    </form>
+</div>
+{% endblock %}
