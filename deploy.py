@@ -1,7 +1,6 @@
 import os
 import random
 import sqlite3
-# from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
@@ -21,7 +20,7 @@ Session(app)
 
 conn = sqlite3.connect('database.db', check_same_thread=False)
 db = conn.cursor()
-table = "CREATE TABLE IF NOT EXISTS 'encryption_methods' (id INTEGER PRIMARY KEY AUTOINCREMENT, encryption_name TEXT UNIQUE NOT NULL, hashed_password TEXT NOT NULL, encryption_list TEXT, 'length'  INTEGER , type TEXT);"
+table = "CREATE TABLE IF NOT EXISTS 'encryption_methods' (id INTEGER PRIMARY KEY AUTOINCREMENT, encryption_name TEXT UNIQUE NOT NULL, hashed_password TEXT NOT NULL, encryption_list TEXT, 'length'  INTEGER , type TEXT, hashed_admin_key TEXT);"
 db.execute(table)
 
 def generate_padded_encryption(length, encryption_list, i):
@@ -31,6 +30,16 @@ def generate_padded_encryption(length, encryption_list, i):
         return i
     else:
         generate_padded_encryption(length, encryption_list, i)
+
+def checkAdmin():
+    key = request.form.get("adminKey")
+    key = generate_password_hash(key)
+    rows = db.execute("SELECT hashed_admin_key FROM encryption_methods WHERE encryption_name = ?", int(session["user_id"])).fetchall()
+    keyHash = rows[0][0]
+    if check_password_hash(key, keyHash):
+        return True
+    else:
+        return False
 
 def save_encryption(inpt):
     list_ecryption = []
@@ -346,6 +355,8 @@ def create():
         encryption_name = request.form.get("encryption")
         password = request.form.get("password")
         confirmation = request.form.get("confirmation")
+        adminKey = request.form.get("adminKey")
+        adminKeyConfirmation = request.form.get("adminKeyConfirmation")
         name = db.execute("SELECT * FROM encryption_methods WHERE encryption_name = ?", (encryption_name, )).fetchone()
         if not encryption_name:
             flash("Input unique encryption name", "error")
@@ -354,7 +365,7 @@ def create():
             flash("Input password", "error")
             return render_template("create.html")
         if len(password) < 8:
-            flash("password should have at least 8 characters", "error")
+            flash("Password should have at least 8 characters", "error")
             return render_template("create.html")
         if not confirmation:
             flash("Please Confirm password", "error")
@@ -362,12 +373,19 @@ def create():
         if password != confirmation:
             flash("Password was not confirmed correctly", "error")
             return render_template("create.html")
+        if adminKey != adminKeyConfirmation:
+            flash("Admin Key was not confirmed correctly", "error")
+            return render_template("create.html")
+        if len(adminKey) < 8:
+            flash("Admin Key should have at least 8 characters", "error")
+            return render_template("create.html")
         elif name:
             flash("encryption name already exists", "error")
             return render_template("create.html")
         else:
             hashed_password = generate_password_hash(password)
-            db.execute("INSERT INTO encryption_methods (encryption_name, hashed_password, encryption_list, length, type) VALUES(?, ?, ?, ?, ?)", (encryption_name, hashed_password, "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z, ,", 1, "encryption"))
+            hashed_AdminKey = generate_password_hash(adminKey)
+            db.execute("INSERT INTO encryption_methods (encryption_name, hashed_password, encryption_list, length, type, hashed_admin_key) VALUES(?, ?, ?, ?, ?, ?)", (encryption_name, hashed_password, "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z, ,", 1, "encryption", hashed_AdminKey))
             conn.commit()
             rows = db.execute(
             "SELECT id FROM encryption_methods WHERE encryption_name = ?", (encryption_name,)).fetchall()
@@ -381,6 +399,7 @@ def create():
 @login_required
 def routeCustom():
     method = db.execute("SELECT type FROM encryption_methods WHERE id = ?", (session["user_id"],)).fetchone()
+    print(method)
     if method[0] == "encryption":
         return redirect("/use-custom")
     if method[0] == "language":
@@ -410,12 +429,17 @@ def custom():
 @login_required
 def numeric():
     if request.method == "POST":
-        if save_encryption("encryption(/make-custom)"):
-            return redirect("/use-custom")
-        else:    
-            flash("Unique enryption for each character", "error")
-            return render_template("numeric.html")
-    return render_template("numeric.html")
+        if checkAdmin():
+            if save_encryption("encryption(/make-custom)"):
+                return redirect("/use-custom")
+            else:    
+                flash("Unique enryption for each character", "error")
+                return render_template("numeric.html")
+        else:
+            flash("Give Admin key", "error")
+            return render_template("admin.html")
+    flash("Give Admin key", "error")
+    return render_template("admin.html")
 
 @app.route('/use-custom', methods=["GET", "POST"])
 @login_required
@@ -479,6 +503,8 @@ def createlang():
         encryption_name = request.form.get("encryption")
         password = request.form.get("password")
         confirmation = request.form.get("confirmation")
+        adminKey = request.form.get("adminKey")
+        adminKeyConfirmation = request.form.get("adminKeyConfirmation")
         name = db.execute("SELECT * FROM encryption_methods WHERE encryption_name = ?", (encryption_name, )).fetchone()
         if not encryption_name:
             flash("Input unique encryption name", "error")
@@ -495,12 +521,19 @@ def createlang():
         if password != confirmation:
             flash("Password was not confirmed correctly", "error")
             return render_template("createLang.html")
+        if adminKey != adminKeyConfirmation:
+            flash("Admin Key was not confirmed correctly", "error")
+            return render_template("createLang.html")
+        if len(adminKey) < 8:
+            flash("Admin Key should have at least 8 characters", "error")
+            return render_template("createLang.html")
         elif name:
             flash("encryption name already exists", "error")
             return render_template("createLang.html")
         else:
             hashed_password = generate_password_hash(password)
-            db.execute("INSERT INTO encryption_methods (encryption_name, hashed_password, encryption_list, length, type) VALUES(?, ?, ?, ?, ?)", (encryption_name, hashed_password, "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,", 1, "language)"))
+            hashed_AdminKey = generate_password_hash(adminKey)
+            db.execute("INSERT INTO encryption_methods (encryption_name, hashed_password, encryption_list, length, type, hashed_admin_key) VALUES(?, ?, ?, ?, ?, ?)", (encryption_name, hashed_password, "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z, ,", 1, "encryption", hashed_AdminKey))
             conn.commit()
             rows = db.execute(
             "SELECT id FROM encryption_methods WHERE encryption_name = ?", (encryption_name,)).fetchall()
